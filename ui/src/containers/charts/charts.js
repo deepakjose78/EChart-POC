@@ -1,5 +1,4 @@
 import React from 'react';
-import './charts.css';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
