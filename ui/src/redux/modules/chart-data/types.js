@@ -1,0 +1,4 @@
+export default {
+  'FETCH_REQUESTS': 'FETCH_REQUESTS',
+  'CHANGE_CHART_TYPE': 'CHANGE_CHART_TYPE'
+};
