@@ -7,16 +7,16 @@ const headers = new Headers();
 headers.append("Content-Type", "application/json");
 
 
-const api = (data) => {
-  return function(dispatch) {
-    return fetch(data.meta.url, data.meta)
-      .then(resp => resp.json())
-      .then(json => {
-        delete data.meta;
-        dispatch({...data, payload: json});
-     });
-  }
-}
+// const api = (data) => {
+//   return function(dispatch) {
+//     return fetch(data.meta.url, data.meta)
+//       .then(resp => resp.json())
+//       .then(json => {
+//         delete data.meta;
+//         dispatch({...data, payload: json});
+//      });
+//   }
+// }
 
 
 export const actions = {
@@ -27,7 +27,7 @@ export const actions = {
     }
   }),
   fetchChartData: () =>
-    api({
+    ({
       type: types.FETCH_REQUESTS,
       meta: {
         type: `api`,

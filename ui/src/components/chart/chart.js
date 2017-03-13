@@ -3,13 +3,101 @@ import ReactEcharts from 'echarts-for-react';
 
 export class Chart extends React.Component{
 
-  constructor(props){
-    super(props);
-    console.log('Graph type', this.props.chartType)
+  // chartBaseConfig: {
+  //     title: {
+  //         text: 'Line chart'
+  //     },
+  //     tooltip : {
+  //         trigger: 'axis'
+  //     },
+  //     legend: {
+  //         data:['Equipment Usage Comparison']
+  //     },
+  //     toolbox: {
+  //         feature: {
+  //             saveAsImage: {}
+  //         }
+  //     },
+  //     grid: {
+  //         left: '3%',
+  //         right: '4%',
+  //         bottom: '3%',
+  //         containLabel: true
+  //     },
+  //     xAxis : [
+  //         {
+  //             type : 'category',
+  //             boundaryGap : false,
+  //             data : ['Analytical Balance', 'AFS', 'other', 'Bioreactor']
+  //         }
+  //     ],
+  //     yAxis : [
+  //         {
+  //             type : 'value'
+  //         }
+  //     ],
+  //     series : [
+  //         {
+  //             name:'Equipment Usage Comparison',
+  //             type: undefined,
+  //             stack: 'Total Amout',
+  //             areaStyle: {'color':'transparent'},
+  //             lineStyle: {'width': '2px', 'color': '#ee3897'},
+  //             nodeStyle: {'color': '#ee3897', 'borderColor': 'blue'},
+  //             data:[]
+  //         }
+  //     ]
+  // };
+
+  getXAxisData(array){
+    return array.map((item) => {
+      return item.name;
+    })
   }
 
   get options(){
-    var self = this;
+    // return {
+    //     title: {
+    //         text: 'Line chart'
+    //     },
+    //     tooltip : {
+    //         trigger: 'axis'
+    //     },
+    //     toolbox: {
+    //         feature: {
+    //             saveAsImage: {}
+    //         }
+    //     },
+    //     grid: {
+    //         left: '3%',
+    //         right: '4%',
+    //         bottom: '3%',
+    //         containLabel: true
+    //     },
+    //     xAxis : [
+    //         {
+    //             type : 'category',
+    //             boundaryGap : false,
+    //             data : ['Analytical Balance', 'AFS', 'other', 'Bioreactor']
+    //         }
+    //     ],
+    //     yAxis : [
+    //         {
+    //             type : 'value'
+    //         }
+    //     ],
+    //     series : [
+    //         {
+    //             name:'Equipment Usage Comparison',
+    //             type: this.props.chartType,
+    //             stack: 'Total Amout',
+    //             areaStyle: {'color':'transparent'},
+    //             lineStyle: {'width': '2px', 'color': '#ee3897'},
+    //             nodeStyle: {'color': '#ee3897', 'borderColor': 'blue'},
+    //             data:this.props.data || []
+    //         }
+    //     ]
+    // };
     if(this.props.chartType === "line"){
       return {
           title: {
@@ -36,7 +124,7 @@ export class Chart extends React.Component{
               {
                   type : 'category',
                   boundaryGap : false,
-                  data : ['Analytical Balance', 'AFS', 'other', 'Bioreactor']
+                  data : this.getXAxisData(this.props.data)
               }
           ],
           yAxis : [
@@ -52,7 +140,7 @@ export class Chart extends React.Component{
                   areaStyle: {'color':'transparent'},
                   lineStyle: {'width': '2px', 'color': '#ee3897'},
                   nodeStyle: {'color': '#ee3897', 'borderColor': 'blue'},
-                  data:[2400, 4567, 800, 2000]
+                  data:this.props.data || []
               }
           ]
       };
@@ -89,7 +177,7 @@ export class Chart extends React.Component{
                   areaStyle: {'color':'transparent'},
                   lineStyle: {'width': '2px', 'color': '#ee3897'},
                   nodeStyle: {'color': '#ee3897', 'borderColor': 'blue'},
-                  data:[{name: "Analytical Balance", value: 2400, itemStyle: {normal: {color: '#ffc732'}}}, {name: "AFS", value: 4567, itemStyle: {normal: {color: '#2dbdcc'}}}, { name: "other", value: 800, itemStyle: {normal: {color: '#a5cd50'}}}, { name: "Bioreactor", value: 2000, itemStyle: {normal: {color: '#ea3c95'}}}]
+                  data:this.props.data || []
               }
           ]
       };
@@ -120,7 +208,7 @@ export class Chart extends React.Component{
               {
                   type : 'category',
                   boundaryGap : false,
-                  data : ['Analytical Balance', 'AFS', 'other', 'Bioreactor']
+                  data : this.getXAxisData(this.props.data || [])
               }
           ],
           yAxis : [
@@ -138,16 +226,14 @@ export class Chart extends React.Component{
                   areaStyle: {'color':'transparent'},
                   lineStyle: {'width': '2px', 'color': '#ee3897'},
                   nodeStyle: {'color': '#ee3897', 'borderColor': 'blue'},
-                  data:[2400, 4567, 800, 2000]
+                  data:this.props.data || []
               }
           ]
       };
     }
   }
 
-  onChartReadyCallback(){
-    console.log('Chart ready');
-  }
+  // onChartReadyCallback(){}
 
   eventsDict = {
     click: function(){
