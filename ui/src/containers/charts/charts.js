@@ -20,6 +20,7 @@ class ChartsContainer extends React.Component{
         <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 no-padding charts-wrapper">
           <Chart
             data={this.props.data}
+            fetchChartData={this.props.fetchChartData}
             chartType={this.props.chartType} />
         </div>
       </div>
@@ -28,6 +29,7 @@ class ChartsContainer extends React.Component{
 }
 
 const mapStateToProps = (state) => {
+  state = state.toJS();
   return {
     data: state.chartData,
     chartType: state.chartType
