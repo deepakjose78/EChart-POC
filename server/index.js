@@ -76,26 +76,31 @@ getValue = (posIndex) => {
 }
 function emitData(timeout = 1000, socket){
   setTimeout(() => {
-    let result = [
-      {
-        name: getName(0),
-        value: getValue(0)
-      },
-      {
-        name: getName(1),
-        value: getValue(1)
-      },
-      {
-         name: getName(2),
-         value: getValue(2)
-       },
-       {
-         name: getName(3),
-         value: getValue(3)
-       }
-    ]
-    socket.emit('chartData', result)
+    var timeStamp = new Date().getTime();
+    let result = {
+      timeStamp: timeStamp,
+      data: [
+        {
+          name: getName(0),
+          value: getValue(0)
+        },
+        {
+          name: getName(1),
+          value: getValue(1)
+        },
+        {
+           name: getName(2),
+           value: getValue(2)
+         },
+         {
+           name: getName(3),
+           value: getValue(3)
+         }
+      ]
+    };
+    socket.emit('chartData', result, function(ackTimeStamp){
+      emitData(3000, socket);
+    })
     console.log('Emitting socket data', new Date().getTime());
-    emitData(3000, socket);
   }, timeout);
 }
