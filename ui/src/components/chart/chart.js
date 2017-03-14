@@ -14,9 +14,6 @@ export class Chart extends React.Component{
       title: {
           text: `${this.props.chartType} Chart`
       },
-      tooltip : {
-          trigger: 'axis'
-      },
       legend: {
           data:['Equipment Usage Comparison']
       },
@@ -24,12 +21,6 @@ export class Chart extends React.Component{
           feature: {
               saveAsImage: {}
           }
-      },
-      grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
       }
     }
   }
@@ -43,11 +34,20 @@ export class Chart extends React.Component{
                 data : this.getXAxisData(this.props.data)
             }
         ],
+        tooltip : {
+            trigger: 'axis'
+        },
         yAxis : [
             {
                 type : 'value'
             }
         ],
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
         series : [
             {
                 name:'Equipment Usage Comparison',
@@ -69,10 +69,13 @@ export class Chart extends React.Component{
                 saveAsImage: {}
             }
         },
+        tooltip : {
+            trigger: 'axis'
+        },
         xAxis : [
             {
                 type : 'category',
-                boundaryGap : false,
+                boundaryGap : true,
                 data : this.getXAxisData(this.props.data || [])
             }
         ],
@@ -81,6 +84,12 @@ export class Chart extends React.Component{
                 type : 'value'
             }
         ],
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
         barWidth: '10px',
         barGap: '1%',
         series : [
@@ -99,20 +108,18 @@ export class Chart extends React.Component{
 
   get pieChartConfig(){
     return {
-        series : [
-            {
-                name:'Equipment Usage Comparison',
-                type: this.props.chartType,
-                radius : ['50%', '70%'],
-                label: {normal: {show: true, formatter: '{b}', textStyle: {color: 'black'}}},
-                stack: 'Total Amout',
-                areaStyle: {'color':'transparent'},
-                lineStyle: {'width': '2px', 'color': '#ee3897'},
-                nodeStyle: {'color': '#ee3897', 'borderColor': 'blue'},
-                data:this.props.data || []
-            }
-        ]
-    };
+      series : [
+          {
+              name:'Equipment Usage Comparison',
+              type:'pie',
+              radius: ['50%', '70%'],
+              avoidLabelOverlap: false,
+              label: { normal: { show: true, formatter: '{b}'}, emphasis: { show: true, position: 'center', textStyle: { fontSize: '30', fontWeight: 'bold'}}},
+              labelLine: { normal: { show: true, position: 'center', }},
+              data:this.props.data || []
+          }
+      ]
+      };
   }
 
   get options(){
@@ -124,7 +131,7 @@ export class Chart extends React.Component{
         return {...this.chartBaseConfig, ...this.barChartConfig};
       case "pie":
         return {...this.chartBaseConfig, ...this.pieChartConfig};
-      default:
+      default://default is bar chart
         return {...this.chartBaseConfig, ...this.barChartConfig};
     }
 

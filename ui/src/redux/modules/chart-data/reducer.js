@@ -2,7 +2,7 @@ import types from './types';
 import { Map } from "immutable";
 
 const initialState = Map({
-  chartType: 'bar'
+  chartType: 'pie'
 })
 
 export const reducer = (state = initialState, action) => {
