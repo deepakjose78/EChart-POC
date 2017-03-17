@@ -10,9 +10,10 @@ export class Chart extends React.Component{
   }
 
   get chartBaseConfig(){
+    let { chartType } = this.props.chartType;
     return {
       title: {
-          text: `${this.props.chartType} Chart`
+          text: `${chartType} Chart`
       },
       legend: {
           data:['Equipment Usage Comparison']
@@ -26,12 +27,14 @@ export class Chart extends React.Component{
   }
 
   get lineChartConfig(){
+    let { data, chartType } = this.props;
     return {
         xAxis : [
             {
-                type : 'category',
-                boundaryGap : false,
-                data : this.getXAxisData(this.props.data)
+              offset: 0,
+              type : 'category',
+              boundaryGap : false,
+              data : this.getXAxisData(data || [])
             }
         ],
         tooltip : {
@@ -39,84 +42,109 @@ export class Chart extends React.Component{
         },
         yAxis : [
             {
-                type : 'value'
+                type : 'value',
+                offset: 0,
             }
         ],
         grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
+          show: true,
+          left: '10%',
+          right: '10%',
+          bottom: '10%',
         },
         series : [
-            {
-                name:'Equipment Usage Comparison',
-                type: this.props.chartType,
-                stack: 'Total Amout',
-                areaStyle: {'color':'transparent'},
-                lineStyle: {'width': '2px', 'color': '#ee3897'},
-                nodeStyle: {'color': '#ee3897', 'borderColor': 'blue'},
-                data:this.props.data || []
-            }
+          {
+              name:'Equipment Usage Comparison',
+              type: chartType,
+              areaStyle: {'color':'transparent'},
+              lineStyle: {normal: {'width': 2, 'type': 'dotted', 'color': '#2e6da4'}},
+              nodeStyle: {'color': '#ee3897', 'borderColor': 'blue'},
+              data: data || [],
+              smooth: true
+          },
+          {
+              name:'Equipment Usage Comparison',
+              type: chartType,
+              areaStyle: {'color':'transparent'},
+              lineStyle: { normal: {'width': '2', 'color': 'red', 'type': 'dashed'}},
+              nodeStyle: {'color': '#ee3897', 'borderColor': 'blue'},
+              data: (data && [data[3], data[2], data[1], data[0]]) || [],
+              smooth: true
+          },
         ]
     };
   }
 
   get barChartConfig(){
+    let { data, chartType } = this.props;
     return {
         toolbox: {
             feature: {
-                saveAsImage: {}
+                saveAsImage: {title: "Save as Image"}
             }
         },
         tooltip : {
             trigger: 'axis'
         },
+        grid: {
+          show: true,
+          z: 45,
+          left: '3%',
+          right: '4%',
+          bottom: '10%',
+        },
         xAxis : [
             {
-                type : 'category',
-                boundaryGap : true,
-                data : this.getXAxisData(this.props.data || [])
+              offset: 0,
+              type : 'category',
+              boundaryGap : false,
+              data : this.getXAxisData(data || [])
             }
         ],
         yAxis : [
             {
-                type : 'value'
+              offset: 0,
+              type : 'value'
             }
         ],
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
         barWidth: '10px',
-        barGap: '1%',
         series : [
             {
                 name:'Equipment Usage Comparison',
-                type: this.props.chartType,
-                stack: 'Total Amout',
+                type: chartType,
+                barGap: '30%', // Make series be overlap
                 areaStyle: {'color':'transparent'},
                 lineStyle: {'width': '2px', 'color': '#ee3897'},
                 nodeStyle: {'color': '#ee3897', 'borderColor': 'blue'},
-                data:this.props.data || []
+                data: data || []
+            },
+            {
+                name:'Equipment Usage Comparison',
+                type: 'line',
+                areaStyle: {'color':'transparent'},
+                lineStyle: {'width': '2px', 'color': 'blue'},
+                nodeStyle: {'color': 'blue', 'borderColor': 'blue'},
+                data: (data && [data[3], data[2], data[1], data[0]]) || [],
             }
         ]
     };
   }
 
   get pieChartConfig(){
+    let { data, chartType } = this.props;
     return {
+      legend: {
+          data:this.getXAxisData(data || [])
+      },
       series : [
           {
-              name:'Equipment Usage Comparison',
-              type:'pie',
+              name: 'Equipment Usage Comparison',
+              type: chartType,
               radius: ['50%', '70%'],
               avoidLabelOverlap: false,
               label: { normal: { show: true, formatter: '{b}'}, emphasis: { show: true, position: 'center', textStyle: { fontSize: '30', fontWeight: 'bold'}}},
               labelLine: { normal: { show: true, position: 'center', }},
-              data:this.props.data || []
+              data: data || []
           }
       ]
       };
@@ -145,12 +173,29 @@ export class Chart extends React.Component{
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState){
+    if(this.props.data && (this.props.data !== nextProps.data || this.props.chartType !== nextProps.chartType)){
+      let echartsInstance = this.refs.echartsReactRef.getEchartsInstance();
+      this.props.chartType !== nextProps.chartType && echartsInstance.clear();
+      setTimeout(() => {
+        echartsInstance.setOption(this.options);
+      }, 0);
+      return false;
+    }
+    // if(this.props.chartType !== nextProps.chartType){
+    //   let echartsInstance = this.refs.echartsReactRef.getEchartsInstance();
+    //   echartsInstance.clear();
+    // }
+    return true;
+  }
+
   render(){
     return (
       <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
         <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 status-filter-container">
           <ReactEcharts
+            ref='echartsReactRef'
             option={this.options}
             onChartReady={this.onChartReadyCallback}
             onEvents={this.eventsDict} />

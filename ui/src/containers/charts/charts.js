@@ -10,18 +10,20 @@ import { ChartTypeSwitcher } from '../../components/chartTypeSwitcher/chartTypeS
 class ChartsContainer extends React.Component{
 
   componentDidMount(){
-    this.props.fetchChartData();
+    let { fetchChartData } = this.props;
+    fetchChartData();
   }
 
   render(){
+    let { data, fetchChartData, chartType, switchChartType} = this.props;
     return (
       <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding charts-wrapper">
-        <ChartTypeSwitcher changeChartType={this.props.switchChartType} />
+        <ChartTypeSwitcher changeChartType={switchChartType} />
         <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 no-padding charts-wrapper">
           <Chart
-            data={this.props.data}
-            fetchChartData={this.props.fetchChartData}
-            chartType={this.props.chartType} />
+            data={data}
+            fetchChartData={fetchChartData}
+            chartType={chartType} />
         </div>
       </div>
     )
@@ -30,16 +32,18 @@ class ChartsContainer extends React.Component{
 
 const mapStateToProps = (state) => {
   state = state.toJS();
+  let { chartData, chartType} = state;
   return {
-    data: state.chartData,
-    chartType: state.chartType
+    data: chartData,
+    chartType: chartType
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
+  let { fetchChartData, switchChartType} = actions;
   return bindActionCreators({
-      fetchChartData: () => actions.fetchChartData(),
-      switchChartType: (type) => actions.switchChartType(type)
+      fetchChartData: () => fetchChartData(),
+      switchChartType: (type) => switchChartType(type)
     }, dispatch);
 }
 

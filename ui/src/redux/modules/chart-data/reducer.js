@@ -2,15 +2,17 @@ import types from './types';
 import { Map } from "immutable";
 
 const initialState = Map({
-  chartType: 'pie'
+  chartType: 'line'
 })
 
 export const reducer = (state = initialState, action) => {
   switch(action.type){
     case types.DATA_RECEIVED:
-      return state.set('chartData', action.payload || []);
+      let { payload } = action;
+      return state.set('chartData', payload || []);
     case types.CHANGE_CHART_TYPE:
-      return state.set('chartType', action.meta.typeStr);
+      let {meta: {typeStr: type}} = action;
+      return state.set('chartType', type);
     default:
       return state;
   }

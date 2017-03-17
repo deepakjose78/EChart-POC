@@ -17,10 +17,10 @@ var server = http.createServer(app);
 
 //Socket connection
 io(server).on('connection', function(socket){
-  console.log('user connected');
+  console.log('user connected', socket.id);
   emitData(0, socket);
   socket.on('disconnect', function(){
-    console.log('user disconnected');
+    console.log('user disconnected', socket.id);
     delete socket;
   });
 });
@@ -100,7 +100,6 @@ function emitData(timeout = 1000, socket){
     };
     socket.emit('chartData', result, function(ackTimeStamp){
       emitData(3000, socket);
-    })
-    console.log('Emitting socket data', new Date().getTime());
+    });
   }, timeout);
 }
